@@ -17,6 +17,7 @@ namespace MiguelGameDev.Editor
             PlayerPrefs.DeleteAll();
             PlayerPrefs.Save();
         }
+
         [MenuItem("Dreaming Arts/Saved Data/Delete PlayerPrefs")]
         static void DeletePlayerPrefsData()
         {
