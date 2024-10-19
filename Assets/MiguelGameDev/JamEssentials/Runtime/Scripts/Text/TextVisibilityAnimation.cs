@@ -52,11 +52,6 @@ namespace MiguelGameDev
             Text.maxVisibleCharacters = 0;
         }
 
-        private void OnDestroy()
-        {
-            StopCoroutine(_showCoroutine);
-        }
-
         public void Play()
         {
             Text.maxVisibleCharacters = 0;
@@ -125,16 +120,70 @@ namespace MiguelGameDev
 
         private void ShowNext()
         {
-            if (Text.maxVisibleCharacters < Text.textInfo.characterCount)
+            if (Text.maxVisibleCharacters >= Text.textInfo.characterCount)
             {
-                switch (Text.textInfo.characterInfo[Text.maxVisibleCharacters].character)
-                {
-                    case ',':
-                        if (_delayScale == 0)
+                Complete();
+                return;
+            }
+
+            switch (Text.textInfo.characterInfo[Text.maxVisibleCharacters].character)
+            {
+                case ',':
+                    if (_delayScale == 0)
+                    {
+                        ++Text.maxVisibleCharacters;
+                        ShowNext();
+                        return;
+                    }
+                    else
+                    {
+                        if (IsANumberSymbol())
                         {
-                            ++Text.maxVisibleCharacters;
-                            ShowNext();
-                            return;
+                            _showCoroutine = StartCoroutine(
+                                ShowNextDelayed(Random.Range(0.05f, 0.01f) * _delayScale));
+                            break;
+                        }
+                        _showCoroutine = StartCoroutine(
+                            ShowNextDelayed(0.15f * _delayScale));
+                    }
+                    break;
+
+                case ';':
+                    if (_delayScale == 0)
+                    {
+                        ++Text.maxVisibleCharacters;
+                        ShowNext();
+                        return;
+                    }
+                    else
+                    {
+                        _showCoroutine = StartCoroutine(
+                            ShowNextDelayed(0.15f * _delayScale));
+                    }
+                    break;
+
+                case '.':
+                    if (_delayScale == 0)
+                    {
+                        ++Text.maxVisibleCharacters;
+                        ShowNext();
+                        return;
+                    }
+                    else
+                    {
+                        if (_suspendedPoints > 0)
+                        {
+                            if (_suspendedPoints == 1)
+                            {
+                                _showCoroutine = StartCoroutine(
+                                    ShowNextDelayed(0.2f * _delayScale));
+                            }
+                            else
+                            {
+                                _showCoroutine = StartCoroutine(
+                                    ShowNextDelayed(0.1f * _delayScale));
+                            }
+                            --_suspendedPoints;
                         }
                         else
                         {
@@ -144,97 +193,33 @@ namespace MiguelGameDev
                                     ShowNextDelayed(Random.Range(0.05f, 0.01f) * _delayScale));
                                 break;
                             }
-                            _showCoroutine = StartCoroutine(
-                                ShowNextDelayed(0.15f * _delayScale));
-                        }
-                        break;
 
-                    case ';':
-                        if (_delayScale == 0)
-                        {
-                            ++Text.maxVisibleCharacters;
-                            ShowNext();
-                            return;
-                        }
-                        else
-                        {
-                            _showCoroutine = StartCoroutine(
-                                ShowNextDelayed(0.15f * _delayScale));
-                        }
-                        break;
-
-                    case '.':
-                        if (_delayScale == 0)
-                        {
-                            ++Text.maxVisibleCharacters;
-                            ShowNext();
-                            return;
-                        }
-                        else
-                        {
-                            if (_suspendedPoints > 0)
+                            int i = Text.maxVisibleCharacters + 1;
+                            for (; i < Text.textInfo.characterCount; ++i)
                             {
-                                if (_suspendedPoints == 1)
+                                if (Text.textInfo.characterInfo[i].character != '.')
                                 {
-                                    _showCoroutine = StartCoroutine(
-                                        ShowNextDelayed(0.2f * _delayScale));
-                                }
-                                else
-                                {
-                                    _showCoroutine = StartCoroutine(
-                                        ShowNextDelayed(0.1f * _delayScale));
-                                }
-                                --_suspendedPoints;
-                            }
-                            else
-                            {
-                                if (IsANumberSymbol())
-                                {
-                                    _showCoroutine = StartCoroutine(
-                                        ShowNextDelayed(Random.Range(0.05f, 0.01f) * _delayScale));
                                     break;
                                 }
-
-                                int i = Text.maxVisibleCharacters + 1;
-                                for (; i < Text.textInfo.characterCount; ++i)
-                                {
-                                    if (Text.textInfo.characterInfo[i].character != '.')
-                                    {
-                                        break;
-                                    }
-                                    ++_suspendedPoints;
-                                }
-                                if (_suspendedPoints >= 1)
-                                {
-                                    _showCoroutine = StartCoroutine(
-                                        ShowNextDelayed(0.1f * _delayScale));
-                                }
-                                else
-                                {
-                                    _suspendedPoints = 0;
-                                    _showCoroutine = StartCoroutine(
-                                        ShowNextDelayed(0.1f * _delayScale));
-                                }
+                                ++_suspendedPoints;
                             }
-                        }
-                        break;
-
-                        case '\n':
-                            if (_breakDelayScale == 0)
+                            if (_suspendedPoints >= 1)
                             {
-                                ++Text.maxVisibleCharacters;
-                                ShowNext();
-                                return;
+                                _showCoroutine = StartCoroutine(
+                                    ShowNextDelayed(0.1f * _delayScale));
                             }
                             else
                             {
+                                _suspendedPoints = 0;
                                 _showCoroutine = StartCoroutine(
-                                    ShowNextDelayed(0.25f * _delayScale));
+                                    ShowNextDelayed(0.1f * _delayScale));
                             }
-                        break;
+                        }
+                    }
+                    break;
 
-                    default:
-                        if (_delayScale == 0)
+                    case '\n':
+                        if (_breakDelayScale == 0)
                         {
                             ++Text.maxVisibleCharacters;
                             ShowNext();
@@ -243,17 +228,26 @@ namespace MiguelGameDev
                         else
                         {
                             _showCoroutine = StartCoroutine(
-                                ShowNextDelayed(Random.Range(0.05f, 0.01f) * _delayScale));
+                                ShowNextDelayed(0.25f * _delayScale));
                         }
-                        break;
-                }
-                OnWriteChar?.Invoke();
-                ++Text.maxVisibleCharacters;
+                    break;
+
+                default:
+                    if (_delayScale == 0)
+                    {
+                        ++Text.maxVisibleCharacters;
+                        ShowNext();
+                        return;
+                    }
+                    else
+                    {
+                        _showCoroutine = StartCoroutine(
+                            ShowNextDelayed(Random.Range(0.05f, 0.01f) * _delayScale));
+                    }
+                    break;
             }
-            else
-            {
-                Complete();
-            }
+            OnWriteChar?.Invoke();
+            ++Text.maxVisibleCharacters;
         }
 
         private bool IsANumberSymbol()
