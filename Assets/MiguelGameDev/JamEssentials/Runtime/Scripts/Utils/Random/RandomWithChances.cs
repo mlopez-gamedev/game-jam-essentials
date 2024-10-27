@@ -14,22 +14,22 @@ namespace MiguelGameDev
         {
             _elementChances = new Dictionary<T, float>(elementChancesList.Length);
 
-            var totalChances = 0f;
+            _totalChances = 0f;
             foreach (var pickChances in elementChancesList)
             {
                 _elementChances.Add(pickChances.Pick, pickChances.Chances);
-                totalChances += pickChances.Chances;
+                _totalChances += pickChances.Chances;
             }
         }
 
         public RandomWithChances(Dictionary<T, float> elementChances)
         {
             _elementChances = elementChances;
-            var totalChances = 0f;
+            _totalChances = 0f;
             var e = elementChances.GetEnumerator();
             while (e.MoveNext())
             {
-                totalChances += e.Current.Value;
+                _totalChances += e.Current.Value;
             }
             e.Dispose();
         }
