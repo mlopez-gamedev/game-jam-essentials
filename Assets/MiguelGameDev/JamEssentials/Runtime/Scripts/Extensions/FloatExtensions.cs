@@ -92,5 +92,10 @@ namespace MiguelGameDev
                 }
             }
         }
+
+        public static bool IsBetween(this float value, float a, float b)
+        {
+            return (value > a && value < b) || (value > b && value < a);
+        }
     }
 }

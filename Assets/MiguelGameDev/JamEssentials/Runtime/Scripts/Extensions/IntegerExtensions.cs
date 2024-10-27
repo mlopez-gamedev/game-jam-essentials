@@ -22,5 +22,10 @@ namespace MiguelGameDev
             return ((float)value).ToTimeSpanString(showMinorZeros,
                 secsSuffix, minsSuffix, hoursSuffix, daysSuffix);
         }
+
+        public static bool IsBetween(this int value, int a, int b)
+        {
+            return (value > a && value < b) || (value > b && value < a); 
+        }
     }
 }
