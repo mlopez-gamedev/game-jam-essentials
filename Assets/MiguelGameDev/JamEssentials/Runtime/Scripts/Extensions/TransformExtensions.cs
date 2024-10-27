@@ -6,6 +6,14 @@ namespace MiguelGameDev
 {
     public static class TransformExtensions
     {
+        public static void DestroyAllChildren(this Transform t)
+        {
+            for (int i = 0; i < t.childCount; ++i)
+            {
+                Object.Destroy(t.GetChild(i).gameObject);
+            }
+        }
+
         public static void SetPositionX (this Transform t, float x)
         {
             Vector3 position = t.position;
@@ -50,7 +58,22 @@ namespace MiguelGameDev
 
         public static void SetScale(this Transform t, float scale)
         {
-            t.localScale = new Vector2(scale, scale);
+            t.localScale = new Vector3(scale, scale, scale);
+        }
+
+        public static void SetScaleX(this Transform t, float scale)
+        {
+            t.localScale = new Vector3(scale, t.localScale.y, t.localScale.z);
+        }
+
+        public static void SetScaleY(this Transform t, float scale)
+        {
+            t.localScale = new Vector3(t.localScale.x, scale, t.localScale.z);
+        }
+
+        public static void SetScaleZ(this Transform t, float scale)
+        {
+            t.localScale = new Vector3(t.localScale.x, t.localScale.y, scale);
         }
 
         public static void LookAtXY(this Transform t, Vector2 position, float speed)
