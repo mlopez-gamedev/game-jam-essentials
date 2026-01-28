@@ -70,4 +70,14 @@ public static class RectTransformExtensions
     {
         t.sizeDelta = new Vector2(size, size);
     }
+    
+    public static void SetSizeDeltaX(this RectTransform t, float size)
+    {
+        t.sizeDelta = new Vector2(size, t.sizeDelta.y);
+    }
+    
+    public static void SetSizeDeltaY(this RectTransform t, float size)
+    {
+        t.sizeDelta = new Vector2(t.sizeDelta.x, size);
+    }
 }

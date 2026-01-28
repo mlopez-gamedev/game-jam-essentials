@@ -74,23 +74,27 @@ namespace MiguelGameDev
 
         public void Continue()
         {
-            if (!_isAnimating)
+            if (_isAnimating)
             {
-                _showCoroutine = StartCoroutine(
-                    ShowNextDelayed(_firstDelay));
-                _isAnimating = true;
+                return;
             }
+            
+            _showCoroutine = StartCoroutine(
+                ShowNextDelayed(_firstDelay));
+            _isAnimating = true;
         }
 
         public void AppendText(string text)
         {
             Text.text += text;
-            if (!_isAnimating)
+            if (_isAnimating)
             {
-                _showCoroutine = StartCoroutine(
-                    ShowNextDelayed(_firstDelay));
-                _isAnimating = true;
+                return;
             }
+            
+            _showCoroutine = StartCoroutine(
+                ShowNextDelayed(_firstDelay));
+            _isAnimating = true;
         }
 
         public void AppendLine()
@@ -101,12 +105,14 @@ namespace MiguelGameDev
         public void AppendLine(string text)
         {
             Text.text += "\n" + text;
-            if (!_isAnimating)
+            if (_isAnimating)
             {
-                _showCoroutine = StartCoroutine(
-                    ShowNextDelayed(_firstDelay));
-                _isAnimating = true;
+                return;
             }
+            
+            _showCoroutine = StartCoroutine(
+                ShowNextDelayed(_firstDelay));
+            _isAnimating = true;
         }
 
         public void Complete()

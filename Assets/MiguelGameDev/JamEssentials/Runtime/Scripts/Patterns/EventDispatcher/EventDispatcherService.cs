@@ -42,6 +42,11 @@ namespace MiguelGameDev.Generic.Event
             {
                 _events[type] -= callback;
             }
+            
+            if (_events[type] == null)
+            {
+                _events.Remove(type);
+            }
         }
 
         public void Dispatch<T>(T signal) where T : ISignal
@@ -49,7 +54,8 @@ namespace MiguelGameDev.Generic.Event
             var type = typeof(T);
             if (!_events.ContainsKey(type))
                 return;
-            _events[type](signal);
+            
+            _events[type].Invoke(signal);
         }
     }
 

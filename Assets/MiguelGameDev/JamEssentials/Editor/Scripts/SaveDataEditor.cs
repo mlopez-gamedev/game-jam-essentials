@@ -6,7 +6,7 @@ namespace MiguelGameDev.Editor
 {
     public class SaveDataEditor
     {
-        [MenuItem("Team The Dream/Saved Data/Delete All")]
+        [MenuItem("Miguel GameDev/Saved Data/Delete All")]
         static void DeleteAllData()
         {
             string[] files = Directory.GetFiles(Application.persistentDataPath);
@@ -18,7 +18,7 @@ namespace MiguelGameDev.Editor
             PlayerPrefs.Save();
         }
 
-        [MenuItem("Dreaming Arts/Saved Data/Delete PlayerPrefs")]
+        [MenuItem("Miguel GameDev/Saved Data/Delete PlayerPrefs")]
         static void DeletePlayerPrefsData()
         {
             PlayerPrefs.DeleteAll();

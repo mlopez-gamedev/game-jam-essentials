@@ -43,6 +43,11 @@ namespace MiguelGameDev.Generic.Event
             {
                 _events[type] -= callback;
             }
+
+            if (_events[type] == null)
+            {
+                _events.Remove(type);
+            }
         }
 
         public async Task Dispatch<T>(T signal) where T : IHook
@@ -50,7 +55,8 @@ namespace MiguelGameDev.Generic.Event
             var type = typeof(T);
             if (!_events.ContainsKey(type))
                 return;
-            await _events[type](signal);
+            
+            await _events[type].Invoke(signal);
         }
     }
 

@@ -1,22 +1,22 @@
 ﻿using DG.Tweening;
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MiguelGameDev
 {
-    public class TextFadeAnimation : MonoBehaviour
+    public class GraphicFadeAnimation : MonoBehaviour
     {
-        TMP_Text _text;
+        Graphic _graphic;
 
         Tween _tween;
 
-        private TMP_Text Text {
+        private Graphic Graphic {
             get {
-                if (_text == null)
+                if (_graphic == null)
                 {
-                    _text = GetComponent<TMP_Text>();
+                    _graphic = GetComponent<Graphic>();
                 }
-                return _text;
+                return _graphic;
             }
         }
 
@@ -40,7 +40,7 @@ namespace MiguelGameDev
 
         private void OnEnable()
         {
-            _tween = Text.DOFade(0.5f, 1f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
+            //_tween = Graphic.DOFade(0.5f, 1f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
         }
     }
 }
